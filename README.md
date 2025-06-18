@@ -5,7 +5,9 @@ This project presents an advanced SQL analysis of the Amazon content dataset usi
 
 ## Objective
  -To extract, analyze, and visualize key patterns and trends in Amazon's global catalogue of movies and TV shows.
+ 
  -To demonstrate proficiency in advanced SQL concepts such as CTEs, window functions, and string manipulation.
+ 
  -To provide business-relevant insights, including content growth rates, genre popularity, and international distribution, supporting     data-driven recommendations.
 
 ## DataSet
