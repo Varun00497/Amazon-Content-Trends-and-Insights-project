@@ -268,6 +268,22 @@ ORDER BY country_count DESC
 LIMIT 5;
 ```
 
+## Findings
+-Content Growth: Amazon’s content library has grown steadily over the past decade, with a significant increase in original productions since 2015.
+
+-Top Countries: The United States, India, and the United Kingdom are the leading producers of Amazon content, accounting for over 60% of titles.
+
+-Genre Trends: Drama, Comedy, and Documentary are the most prevalent genres, with notable growth in international and niche categories.
+
+-Hidden Gems: Identified over 150 lesser-known titles with high ratings and limited mainstream exposure.
+
+-Release Patterns: Most new content is added in the last quarter of each year, aligning with global holiday seasons.
+
+## Conclusion
+
+This analysis highlights Netflix’s strategic focus on expanding its global content library and diversifying genres to appeal to a broader audience. The findings provide actionable insights for content acquisition, marketing, and regional targeting. Advanced SQL techniques enabled efficient extraction of trends and patterns, demonstrating the value of data-driven decision-making in the streaming industry.
+
+
 
 
 
