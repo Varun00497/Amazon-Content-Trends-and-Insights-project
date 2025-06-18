@@ -1,1 +1,1 @@
-# Amazon-Content-Trends-and-Insights-project
+# Amazon Movies and TV Shows Data Analysis using SQL
