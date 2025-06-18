@@ -283,7 +283,7 @@ LIMIT 5;
 
 ## Conclusion
 
-This analysis highlights Netflix’s strategic focus on expanding its global content library and diversifying genres to appeal to a broader audience. The findings provide actionable insights for content acquisition, marketing, and regional targeting. Advanced SQL techniques enabled efficient extraction of trends and patterns, demonstrating the value of data-driven decision-making in the streaming industry.
+This analysis highlights Amazon’s strategic focus on expanding its global content library and diversifying genres to appeal to a broader audience. The findings provide actionable insights for content acquisition, marketing, and regional targeting. Advanced SQL techniques enabled efficient extraction of trends and patterns, demonstrating the value of data-driven decision-making in the streaming industry.
 
 
 
