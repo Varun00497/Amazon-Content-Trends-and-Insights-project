@@ -114,6 +114,163 @@ GROUP BY streak_group
 ORDER BY streak_length DESC
 LIMIT 1;
 ```
+## Q4. Identify directors who have worked across the most distinct genres.
+```sql
+WITH numbers AS (
+    SELECT generate_series(1, 5) AS n
+),
+director_genres AS (
+    SELECT director,
+           TRIM(SPLIT_PART(listed_in, ',', n.n)) AS genre
+    FROM Amazon
+    JOIN numbers n ON n.n <= array_length(string_to_array(listed_in, ','), 1)
+    WHERE director IS NOT NULL
+)
+SELECT director,
+       COUNT(DISTINCT genre) AS genre_count
+FROM director_genres
+GROUP BY director
+ORDER BY genre_count DESC
+LIMIT 5;
+```
+
+## Q5. Find countries that have released at least one new title every year for the last 10 years.
+```sql
+WITH years AS (
+    SELECT DISTINCT release_year
+    FROM Amazon
+    WHERE release_year >= EXTRACT(YEAR FROM CURRENT_DATE) - 9
+),
+country_years AS (
+    SELECT country, release_year
+    FROM Amazon
+    WHERE country IS NOT NULL AND release_year >= EXTRACT(YEAR FROM CURRENT_DATE) - 9
+    GROUP BY country, release_year
+),
+country_counts AS (
+    SELECT country, COUNT(DISTINCT release_year) AS years_with_content
+    FROM country_years
+    GROUP BY country
+)
+SELECT country
+FROM country_counts
+WHERE years_with_content = (SELECT COUNT(*) FROM years);
+```
+## Q6. Determine which genre has seen the highest percentage increase in new content over the last 5 years.
+```sql
+WITH numbers AS (
+    SELECT generate_series(1, 5) AS n
+),
+genre_years AS (
+    SELECT
+        TRIM(SPLIT_PART(listed_in, ',', n.n)) AS genre,
+        release_year
+    FROM Amazon
+    JOIN numbers n ON n.n <= array_length(string_to_array(listed_in, ','), 1)
+    WHERE release_year >= EXTRACT(YEAR FROM CURRENT_DATE) - 5
+),
+genre_counts AS (
+    SELECT genre, release_year, COUNT(*) AS count
+    FROM genre_years
+    GROUP BY genre, release_year
+),
+genre_growth AS (
+    SELECT genre,
+           MIN(release_year) AS start_year,
+           MAX(release_year) AS end_year,
+           MIN(count) AS start_count,
+           MAX(count) AS end_count,
+           ROUND(((MAX(count) - MIN(count))::NUMERIC / NULLIF(MIN(count), 0)) * 100, 2) AS pct_growth
+    FROM genre_counts
+    GROUP BY genre
+)
+SELECT genre, pct_growth
+FROM genre_growth
+ORDER BY pct_growth DESC
+LIMIT 1;
+```
+## Q7. Find “Multi-Talented” Actors: Most Frequent Appearances Across Both Movies and TV Shows.
+```sql
+WITH numbers AS (
+    SELECT generate_series(1, 10) AS n
+),
+actor_types AS (
+    SELECT
+        TRIM(SPLIT_PART(casts, ',', n.n)) AS actor,
+        type
+    FROM Amazon
+    JOIN numbers n ON n.n <= array_length(string_to_array(casts, ','), 1)
+    WHERE casts IS NOT NULL
+),
+actor_appearances AS (
+    SELECT actor, type, COUNT(*) AS appearances
+    FROM actor_types
+    GROUP BY actor, type
+),
+multi_talented AS (
+    SELECT actor, SUM(appearances) AS total_appearances
+    FROM actor_appearances
+    GROUP BY actor
+    HAVING COUNT(DISTINCT type) = 2
+)
+SELECT actor, total_appearances
+FROM multi_talented
+ORDER BY total_appearances DESC
+LIMIT 5;
+```
+
+## Q8. Most Common Pair of Actors Who Frequently Appear Together.
+
+```sql
+WITH numbers AS (
+    SELECT generate_series(1, 5) AS n
+),
+actor_pairs AS (
+    SELECT
+        show_id,
+        TRIM(SPLIT_PART(casts, ',', n1.n)) AS actor1,
+        TRIM(SPLIT_PART(casts, ',', n2.n)) AS actor2
+    FROM Amazon
+    JOIN numbers n1 ON n1.n <= array_length(string_to_array(casts, ','), 1)
+    JOIN numbers n2 ON n2.n <= array_length(string_to_array(casts, ','), 1)
+    WHERE casts IS NOT NULL AND n1.n < n2.n
+)
+SELECT actor1, actor2, COUNT(*) AS appearances_together
+FROM actor_pairs
+WHERE actor1 <> '' AND actor2 <> ''
+GROUP BY actor1, actor2
+ORDER BY appearances_together DESC
+LIMIT 1;
+```
+
+## Q9. For each director, calculate the span (in years) between their earliest and latest release on Netflix. List the top 5 with the longest spans.
+
+```sql
+SELECT director,
+       MIN(release_year) AS first_year,
+       MAX(release_year) AS last_year,
+       (MAX(release_year) - MIN(release_year)) AS career_span
+FROM Amazon
+WHERE director IS NOT NULL
+GROUP BY director
+ORDER BY career_span DESC
+LIMIT 5;
+```
+
+## Q10. Identify titles that are produced in the largest number of countries (i.e., have the most countries listed in the country field).
+
+```sql
+SELECT title, country,
+       array_length(string_to_array(country, ','), 1) AS country_count
+FROM Amazon
+WHERE country IS NOT NULL
+ORDER BY country_count DESC
+LIMIT 5;
+```
+
+
+
+
 
 
 
