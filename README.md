@@ -12,7 +12,7 @@ This project presents an advanced SQL analysis of the Amazon content dataset usi
  The data used for this project is soucred from kaggle dataset:
  -**Dataset Link:** [Movies dataset](https://www.kaggle.com/datasets/utkarshx27/movies-dataset)
 
- ##Schema
+ ## Schema
  ```sql
 
  DROP TABLE IF EXISTS Amazon;
